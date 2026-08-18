@@ -1,17 +1,19 @@
 import React from "react"
 import { useState } from "react";
+import mainApi from "../assets/axios";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
-        console.log({
+        const respone = await mainApi.post("/auth/login", {
             email,
             password
         });
+        console.log(respone.data);
     }
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-base-200 p-4">
