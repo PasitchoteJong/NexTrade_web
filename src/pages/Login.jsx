@@ -1,23 +1,38 @@
 import React from "react"
 import { useState } from "react";
-import mainApi from "../assets/axios";
+import { mainApi } from "../assets/axios";
+import userAuthStore from "../stores/authstore";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const navigate = useNavigate();
+    const login = userAuthStore((state) => state.login);
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const respone = await mainApi.post("/auth/login", {
+        const response = await mainApi.post("/auth/login", {
             email,
             password
         });
-        console.log(respone.data);
+
+        // console.log("Login Response:", response.data)
+
+        const { token, user } = response.data;
+        login(token, user);
+        // console.log(respone.data);
+
+        console.log("Token:", token);
+        console.log("User:", user);
+
+        navigate("/")
     }
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-base-200 p-4">
-            <div className="w-full max-w-6xl-[600px] overflow-hidden rounded-2xl bg-base-100 shadow-2xl flex">
+            <div className="w-full max-w-6xl overflow-hidden rounded-2xl bg-base-100 shadow-2xl flex">
 
                 {/*Left Photo */}
                 <div className="hidden md:block md:w-1/2">
@@ -27,12 +42,12 @@ function Login() {
                 </div>
 
                 {/*Right Login */}
-                <div className="w-full md:w-1/2 flex items-center justify-center p-8 s,:p-12">
+                <div className="w-full md:w-1/2 flex items-center justify-center p-8 sm:p-12">
                     <div className="w-full max-w-md">
                         <div className="mb-8">
                             <h1 className="text-3xl font-bold text-base-content">Welcome!</h1>
                             <br />
-                            <p1 className="mt-2 text-base-contect/60" >Login to use your account.</p1>
+                            <p className="mt-2 text-base-content/60">Login to use your account.</p>
                         </div>
 
                         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -108,4 +123,3 @@ function Login() {
         </div>
     )
 }
-export default Login;
