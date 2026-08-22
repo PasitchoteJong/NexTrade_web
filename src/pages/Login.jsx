@@ -25,8 +25,8 @@ export default function Login() {
         login(token, user);
         // console.log(respone.data);
 
-        console.log("Token:", token);
-        console.log("User:", user);
+        // console.log("Token:", token);
+        // console.log("User:", user);
 
         navigate("/")
     }

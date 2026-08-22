@@ -2,54 +2,51 @@ import { useEffect, useState } from "react";
 import { subscribe } from "./toast";
 
 const toastStyle = {
-    succcess: "alart-success",
-    error: "alart-error",
-    waring: "alert-waring",
+    success: "alert-success",
+    error: "alert-error",
+    warning: "alert-warning",
     info: "alert-info"
 };
 
-function ToastItem({
-    toast, onClose
-}) {
+function ToastItem({ toast, onClose }) {
     useEffect(() => {
         const timer = setTimeout(() => {
-            onclose(toast.id);
+            onClose(toast.id);
         }, toast.duration);
 
         return () => { clearTimeout(timer); }
     }, [toast.id, toast.duration, onClose]);
 
     return (
-        <div className="alert relative overflow-hidden">
+        <div className={`alert ${toastStyle[toast.type]} relative overflow-hidden`}>
             <span>{toast.message}</span>
 
-            <div className={`absolute bottom-0 left-0 h-1 ${toastStyle[toast.type]}`}
-                style={{ animation: `toast-progress ${toast.duration}ms linear forwards` }} />
-
+            <div
+                className="absolute bottom-0 left-0 h-1 bg-black/30"
+                style={{ width: "100%", animation: `toast-progress ${toast.duration}ms linear forwards` }}
+            />
         </div>
     );
 }
 export default function Toast() {
-    const [toasts, setToast] = useState([]);
+    // console.log("Toast Component Render")
+    const [toasts, setToasts] = useState([]);
 
     useEffect(() => {
         const unsubscribe = subscribe((newToast) => {
-            setToasts((current) => [
-                ...current,
-                newToast
-            ]);
+            setToasts((current) => [...current, newToast]);
         });
 
         return unsubscribe;
     }, []);
 
     const removeToast = (id) => {
-        setToast((current) => current.filter((toast) => toast.id !== id))
+        setToasts((current) => current.filter((toast) => toast.id !== id))
     };
 
     return (
-        <div>
-            {toast.map((toast) => (
+        <div className="toast toast-top toast-end z-50">
+            {toasts.map((toast) => (
                 <ToastItem key={toast.id} toast={toast} onClose={removeToast} />
             ))}
         </div>

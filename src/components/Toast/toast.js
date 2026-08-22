@@ -1,7 +1,7 @@
 const listeners = new Set();
 
 const subscribe = (listener) => {
-    listeners.add(listeners);
+    listeners.add(listener);
 
     return () => {
         listeners.delete(listener);
@@ -10,7 +10,7 @@ const subscribe = (listener) => {
 
 const show = (type, message, duration = 5000) => {
     listeners.forEach((listener) => {
-        lestener({
+        listener({
             id: Date.now(),
             type,
             message,
