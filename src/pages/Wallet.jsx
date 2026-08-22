@@ -7,6 +7,7 @@ import {
     getWalletHistory
 } from "../services/walletService";
 import Toast from "../components/Toast";
+import walletIcon from "../../picture/wallet-svgrepo-com.png"
 
 
 export default function Wallet() {
@@ -47,7 +48,7 @@ export default function Wallet() {
             // const respone = await mainApi.get(`/wallet/myWallet`);
 
             // console.log("Get Wallet:", respone.data);
-            
+
             setWallet(data?.data ?? null);
             // console.log("Get Wallet:", data);
         } catch (error) {
@@ -114,7 +115,7 @@ export default function Wallet() {
         }
 
     }
-    
+
     useEffect(() => {
         if (!toast) return;
 
@@ -168,17 +169,17 @@ export default function Wallet() {
 
                                             <div>
                                                 <p className="text-sm opacity-80">Available Balance</p>
-                                                <h2 className="mt-2 text-5xl font-bold">${Number(wallet.balance).toLocaleString("th-TH",
+                                                <h2 className="mt-2 text-5xl font-bold">฿{Number(wallet.balance).toLocaleString("th-TH",
                                                     {
                                                         minimumFractionDigits: 2,
-                                                        maximumSignificantDigits: 2
+                                                        maximumFractionDigits: 2
                                                     }
                                                 )}</h2>
                                                 <p className="mt-3 text-sm opacity-70">Wallet ID:{wallet.walletId || wallet.id}</p>
                                             </div>
 
                                             <div className="hidden md:flex h-24 w-24 items-center justify-center rounded-full bg-white/10 text-5xl">
-                                                Icon
+                                                <img src={walletIcon} alt="wallet icon" />
                                             </div>
                                         </div>
 
@@ -241,8 +242,8 @@ export default function Wallet() {
 
                                                                         <div
                                                                             className={`flex h-10 w-10 items-center justify-center rounded-full ${isDeposit
-                                                                                    ? "bg-success/10 text-success"
-                                                                                    : "bg-error/10 text-error"
+                                                                                ? "bg-success/10 text-success"
+                                                                                : "bg-error/10 text-error"
                                                                                 }`}
                                                                         >
                                                                             {isDeposit ? "+" : "−"}
@@ -267,8 +268,8 @@ export default function Wallet() {
 
                                                                         <p
                                                                             className={`font-bold ${isDeposit
-                                                                                    ? "text-success"
-                                                                                    : "text-error"
+                                                                                ? "text-success"
+                                                                                : "text-error"
                                                                                 }`}
                                                                         >
                                                                             {isDeposit ? "+" : ""}
