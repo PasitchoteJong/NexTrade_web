@@ -9,6 +9,8 @@ import Home from "../pages/Home";
 import UserLayout from "../layouts/UserLayout";
 import ProtectRoutes from "./ProtectedRoute";
 import Wallet from "../pages/Wallet";
+import Stock from "../pages/Stock";
+
 
 const router = createBrowserRouter([
     {
@@ -18,7 +20,10 @@ const router = createBrowserRouter([
                 path: "/", Component: UserLayout,
                 children: [
                     { index: true, Component: Home },
-                    { path: "wallet", Component: Wallet }
+                    { path: "wallet", Component: Wallet },
+                    { path: "stock", Component: Stock },
+                    // { path: "/stock/:symbol", Component: StockDetail },
+
                 ]
             }
         ]
