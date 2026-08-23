@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { subscribe } from "./toast";
 
 const toastStyle = {
@@ -9,6 +9,19 @@ const toastStyle = {
 };
 
 function ToastItem({ toast, onClose }) {
+    // const [isPaused,setIsPaused]= useState(false);
+    // const ramainingTime = useRef(toast.duration);
+    // const startTime = useRef(Date.now());
+    // const timeRef = useRef(null);
+
+    // const StartTimer = ()=>{
+    //     startTime.current = Date.now();
+    //     timeRef.current = setTimeout(()=>{
+    //         onClose(toast.id);
+    //     },remainTime)
+
+    // }
+
     useEffect(() => {
         const timer = setTimeout(() => {
             onClose(toast.id);
