@@ -6,10 +6,12 @@ import {
 } from "lightweight-charts";
 import {
     getStockBySymbol,
-    getStockQuote
+    getStockQuote,
+    updateStock
 } from "../services/stockService";
 import kebabIcon from "../../picture/kebab-svgrepo-com.png"
 import threedotIcon from "../../picture/dots-vertical-svgrepo-com.png"
+import { toast } from "../components/Toast/toast";
 
 
 export default function StockDetail() {
@@ -27,10 +29,9 @@ export default function StockDetail() {
     const [menuStockId, setMenuStockId] = useState(null);
     const [editStock, setEditStock] = useState(null);
     const [form, setForm] = useState({
-        conpanyName: "",
+        companyName: "",
         exchange: "",
         currency: "",
-        logo: "",
         industry: ""
     })
 
@@ -129,7 +130,6 @@ export default function StockDetail() {
             companyName: stock.companyName ?? "",
             exchange: stock.exchange ?? "",
             currency: stock.currency ?? "",
-            logo: stock.logo ?? "",
             industry: stock.industry ?? ""
         });
 
@@ -144,10 +144,16 @@ export default function StockDetail() {
 
             setEditStock(null);
 
-            await handleGetStock();
+            await handleLoadStock();
+            toast.success(data.message);
         } catch (error) {
             console.log("Update Stock Error:", error)
+            toast.error(error?.response);
         }
+    }
+
+    function handleCancel() {
+        setEditStock(null)
     }
 
     const currentPrice = quote?.currentPrice ?? quote?.c ?? null;
@@ -159,7 +165,7 @@ export default function StockDetail() {
     return (
         <div className="min-h-screen bg-base-200 p-6">
             <div className="max-w-7xl mx-auto">
-                <button className="btn btn-ghost mb-6" onClick={() => navigate("/stock")}>
+                <button className="btn btn-ghost mb-6 border border-primary/20" onClick={() => navigate("/stock")}>
                     Back
                 </button>
 
@@ -173,15 +179,75 @@ export default function StockDetail() {
 
                                 setMenuStockId(menuStockId === stock.id ? null : stock.id)
                             }}
-                        >   
+                        >
                             <img src={threedotIcon} alt="threedotIcon" />
                         </button>
 
                         {menuStockId === stock.id && (
                             <div className="absolute right-0 top-10 z-30 w-36 rounded-box bg-base-100 border border-base-300 shadow-lg overflow-hidden">
-                                <button className="w-full text-left px-4 py-2 hover:bg-base-500" onClick={() => handleEdit(stock)}>
-                                    แก้ไข
+                                <button className="w-full text-left px-4 py-2 bg-primary hover:bg-base-500" onClick={() => handleEdit(stock)}>
+                                    Edit
                                 </button>
+                            </div>
+                        )}
+                        {editStock && (
+                            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                                <div className="bg-base-100 rounded-box p-6 w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
+                                    <h2 className="text-3xl bold flex justify-center">Update stock information</h2>
+                                    <form onSubmit={handleUpdateStock}>
+                                        <div className="flex items-center">
+                                            <img src={stock.logo} alt={stock.symbol} className="w-12 h-12 my-4 mr-4" />
+
+                                            <div className="flex-row">
+                                                <h2>Stock : {stock.symbol}</h2>
+                                                {/* <p>CompanyName : {stock.companyName}</p> */}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="label">
+                                                <span className="label-text">Company Name</span>
+                                            </label>
+                                            <input className="input input-bordered w-full mb-3"
+                                                value={form.companyName}
+                                                onChange={(e) => setForm({ ...form, companyName: e.target.value })} />
+
+                                        </div>
+                                        <div>
+                                            <label className="label">
+                                                <span className="label-text">Exchange</span>
+                                            </label>
+                                            <input className="input input-bordered w-full mb-3"
+                                                value={form.exchange}
+                                                onChange={(e) => setForm({ ...form, exchange: e.target.value })} />
+
+                                        </div>
+                                        <div>
+                                            <label className="label">
+                                                <span className="label-text">Currency</span>
+                                            </label>
+                                            <input className="input input-bordered w-full mb-3"
+                                                value={form.currency}
+                                                onChange={(e) => setForm({ ...form, currency: e.target.value })} />
+                                        </div>
+                                        <div>
+                                            <label className="label">
+                                                <span className="label-text">Industry</span>
+                                            </label>
+                                            <input className="input input-bordered w-full mb-3"
+                                                placeholder="Industry"
+                                                value={form.industry}
+                                                onChange={(e) => setForm({ ...form, industry: e.target.value })} />
+                                        </div>
+                                        <div className="flex justifuy-end gap-2">
+                                            <button className="btn" type="button" onClick={handleCancel}>
+                                                Cancle
+                                            </button>
+                                            <button className="btn btn-primary" type="submit">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         )}
                     </div>
@@ -273,7 +339,7 @@ export default function StockDetail() {
                     </div>
 
                     <div className="flex gap-3 mt-6">
-                        <button className="btn btn-success">Buy</button>
+                        <button className="btn btn-success flex-1">Buy</button>
                         <button className="btn btn-error flex-1">Sell</button>
                     </div>
                 </div>

@@ -16,6 +16,12 @@ export async function getStockQuote(symbol) {
 }
 
 export async function updateStock(stockId, payload) {
+    console.log("Stock service StockId:", stockId)
+    console.log("stock Servvice",payload)
+
+    
     const response = await mainApi.patch(`/stock/stocks/${stockId}`,payload);
+
+    console.log("Stcok Service Responde:",response)
     return response.data
 }
