@@ -10,6 +10,7 @@ import UserLayout from "../layouts/UserLayout";
 import ProtectRoutes from "./ProtectedRoute";
 import Wallet from "../pages/Wallet";
 import Stock from "../pages/Stock";
+import StockDetail from "../pages/StockDetail";
 
 
 const router = createBrowserRouter([
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
                     { index: true, Component: Home },
                     { path: "wallet", Component: Wallet },
                     { path: "stock", Component: Stock },
-                    // { path: "/stock/:symbol", Component: StockDetail },
+                    { path: "/stock/:symbol", Component: StockDetail },
 
                 ]
             }

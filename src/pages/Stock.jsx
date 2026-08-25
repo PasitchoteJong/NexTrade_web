@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getStockQuote, getStocks } from "../services/stockService"
+import { getStockQuote, getStocks, updateStock } from "../services/stockService"
 import searchIcon from "../../picture/find-svgrepo-com.png"
 import nextIcon from "../../picture/next-svgrepo-com.png"
 
@@ -11,6 +11,9 @@ export default function Stock() {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
+
+    
 
     async function handleGetStock() {
         try {
@@ -43,6 +46,9 @@ export default function Stock() {
             const quoteMap = {};
             quoteResults.forEach(({ symbol, quote }) => {
                 quoteMap[symbol] = quote;
+
+                console.log("symbol from quoteResult: ", symbol)
+                console.log("quote from quoteResult: ", quote)
             });
             setQuotes(quoteMap);
         } catch (error) {
@@ -68,7 +74,7 @@ export default function Stock() {
         );
     }, [stocks, search]);
 
-    function formatPrice(value, currentcy = "USD") {
+    function formatPrice(value, currency = "USD") {
         if (value == null) return "-";
 
         return new Intl.NumberFormat("en-US", {
@@ -85,6 +91,11 @@ export default function Stock() {
         return `${number >= 0 ? "+" : ""} ${number.toFixed(2)}%`;
 
     }
+
+    
+
+    
+
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -170,7 +181,7 @@ export default function Stock() {
                                         <div className="mt-5">
                                             <div className="flex items-end gap-2">
                                                 <span className="text-2xl font-bold">
-                                                    {formatPrice(currentPrice, stock.currency || "USD")}
+                                                    {formatPrice(currentPrice)}
                                                 </span>
                                                 {changePercent !== null && (
                                                     <span>
