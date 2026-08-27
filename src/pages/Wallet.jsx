@@ -20,10 +20,16 @@ export default function Wallet() {
     const [bookbankId, setBookbankId] = useState("");
     const [bankName, setBankName] = useState("");
 
-    const [history, setHistory] = useState([]);
 
-    const[showAllHistory,setShowAllHistory] = useState(false);
-    const displayedHistory = showAllHistory ? history : history.slice(0,5);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const [history, setHistory] = useState([]);
+    const [showAllHistory, setShowAllHistory] = useState(false);
+
+    const displayedHistory = showAllHistory ? history : history.slice(0, 5);
+
+
 
     async function handleCreateWallet() {
         try {
@@ -78,6 +84,13 @@ export default function Wallet() {
 
             let data;
 
+            if(modalType === "withdraw"){
+                if(amount>Number(wallet.balance)){
+                    toast.error(`The Wallet isnot enough. Your current balance is ${wallet.balance} Bath`)
+                };
+                return;
+            }
+
             if (modalType === "deposit") {
                 data = await depositWallet(payload);
             }
@@ -94,7 +107,12 @@ export default function Wallet() {
         } catch (error) {
             console.log("Wallet Transaction Error:", error)
 
-            toast.error(error?.response);
+            const message = error.response.data.message || "What worng, try agian please";
+
+            // console.log("Wallet Error:",error)
+            // console.log("Wallet Error:", error.response)
+
+            toast.error(message);
         }
 
     }
@@ -180,7 +198,7 @@ export default function Wallet() {
                                     </div>
 
                                     {history.length > 4 && !showAllHistory && (
-                                        <button onClick={()=> setShowAllHistory(true)} className="btn btn-ghost btn-sm">View All</button>
+                                        <button onClick={() => setShowAllHistory(true)} className="btn btn-ghost btn-sm">View All</button>
                                     )}
                                 </div>
 
@@ -286,8 +304,8 @@ export default function Wallet() {
                             <p className="mt-1 text-sm text-base-content/60">
 
                                 {modalType === "deposit"
-                                    ? "Add money to your NexTrade wallet."
-                                    : "Withdraw money from your NexTrade wallet."}
+                                    ? "Add money to your wallet."
+                                    : "Withdraw money from your wallet."}
 
                             </p>
 

@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getStockQuote, getStocks, updateStock } from "../services/stockService"
+import { deleteFavorite, createFavorite, getStockQuote, getStocks, updateStock, getFavoritees } from "../services/stockService"
 import searchIcon from "../../picture/find-svgrepo-com.png"
 import nextIcon from "../../picture/next-svgrepo-com.png"
+import redHeartIcon from "../../picture/heart-angle-red-svgrepo-com.png"
+import whiteHeartIcon from "../../picture/heart-angle-white-svgrepo-com.png"
 
 export default function Stock() {
     const [stocks, setStocks] = useState([]);
@@ -11,9 +13,9 @@ export default function Stock() {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    
 
-    
+    const [favoritePoint, setFavoritePoint] = useState([]);
+
 
     async function handleGetStock() {
         try {
@@ -62,6 +64,19 @@ export default function Stock() {
         handleGetStock();
     }, []);
 
+    useEffect(()=>{
+        async function loadFavorites(){
+            try{
+                const data = await getFavoritees();
+
+            console.log("Fav data:",data)
+            setFavoritePoint(data.data.map((fav)=>fav.stockId));
+            }catch(error){
+                console.log("Get all Fav error:",error);
+            }
+        } loadFavorites();
+    },[])
+
     const filteredStocks = useMemo(() => {
         const keyword = search.trim().toLowerCase();
         if (!keyword) {
@@ -92,10 +107,46 @@ export default function Stock() {
 
     }
 
-    
+    async function handleFavorite(stock) {
+        try {
+
+            console.log("Favorite stock:", stock)
+            console.log("Stock ID:", stock.id)
+
+
+            const isFavorite = favoritePoint.includes(stock.id);
+            if (isFavorite) {
+                await deleteFavorite(stock.id);
+
+                setFavoritePoint((prev) => prev.filter((id) => id !== stock.id))
+            } else {
+                await createFavorite(stock.id);
+
+                setFavoritePoint((prev) => [stock.id, ...prev]);
+            }
+        } catch (error) {
+           
+            console.log("Favorite error", error)
+        }
+    }
+
+    const sortedStock = useMemo(() => {
+        return [...filteredStocks].sort((a, b) => {
+            const aFavorite = favoritePoint.includes(a.id)
+            const bFavorite = favoritePoint.includes(b.id)
+
+            if (aFavorite && !bFavorite) return -1;
+            if (!aFavorite && bFavorite) return 1;
+
+            return 0;
+        })
+    }, [filteredStocks, favoritePoint]);
+
+
+
+
 
     
-
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -149,7 +200,7 @@ export default function Stock() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols2 lg:grid-cols3 xl:grid-cols4 gap-4">
-                        {filteredStocks.map((stock) => {
+                        {sortedStock.map((stock) => {
                             const quote = quotes[stock.symbol];
                             const currentPrice = quote?.currentPrice ?? quote?.c ?? null;
                             const previousClose = quote?.previousClose ?? quote?.pc ?? null
@@ -176,6 +227,19 @@ export default function Stock() {
                                                 <h2 className="font-bold text-lg">{stock.symbol}</h2>
                                                 <p className="text-sm text-base-content/60 truncate">{stock.companyName}</p>
                                             </div>
+
+                                            <div className="ml-auto">
+                                                <button className="btn btn-sm btn-ghost btn-square"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+
+                                                        handleFavorite(stock);
+                                                    }}>
+                                                    {favoritePoint.includes(stock.id) ? <img src={redHeartIcon} alt="redHeartIcon" className="w-full h-full" /> : <img src={whiteHeartIcon} alt="whiteHeartIcon" className="w-full h-full" />}
+                                                </button>
+                                            </div>
+
                                         </div>
 
                                         <div className="mt-5">

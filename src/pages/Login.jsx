@@ -32,7 +32,7 @@ export default function Login() {
     }
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-base-200 p-4">
-            <div className="w-full max-w-6xl overflow-hidden rounded-2xl bg-base-100 shadow-2xl flex">
+            <div className="w-full max-w-7xl overflow-hidden rounded-2xl bg-base-100 shadow-2xl flex">
 
                 {/*Left Photo */}
                 <div className="hidden md:block md:w-1/2">

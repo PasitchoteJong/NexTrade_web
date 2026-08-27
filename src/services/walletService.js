@@ -13,22 +13,17 @@ export async function getMyWallet() {
 }
 
 export async function depositWallet(payload) {
-    const response = await mainApi.post(
-        "/wallet/deposit",
-        payload
-    );
+    const response = await mainApi.post("/wallet/deposit", payload);
 
     return response.data;
 }
 
 export async function withdrawWallet(payload) {
-    const response = await mainApi.post(
-        "/wallet/withdraw",
-        payload);
+    const response = await mainApi.post("/wallet/withdraw", payload);
 
     return response.data;
 }
-export async function getWalletHistory(){
+export async function getWalletHistory() {
     const response = await mainApi.get("/wallet/history");
 
     return response.data;
