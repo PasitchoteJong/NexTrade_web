@@ -1,27 +1,25 @@
 import React from "react"
 import { useState } from "react";
-import { mainApi } from "../assets/axios";
 import userAuthStore from "../stores/authstore";
 import { useNavigate } from "react-router-dom";
+import { loginUserService } from "../services/authService";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
+
     const login = userAuthStore((state) => state.login);
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const response = await mainApi.post("/auth/login", {
-            email,
-            password
-        });
+        const { token, user } = await loginUserService(email, password);
 
         // console.log("Login Response:", response.data)
 
-        const { token, user } = response.data;
+        // const { token, user } = response.data;
         login(token, user);
         // console.log(respone.data);
 

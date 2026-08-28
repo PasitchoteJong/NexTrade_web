@@ -19,6 +19,7 @@ export async function depositWallet(payload) {
 }
 
 export async function withdrawWallet(payload) {
+    console.log("payload", payload);
     const response = await mainApi.post("/wallet/withdraw", payload);
 
     return response.data;

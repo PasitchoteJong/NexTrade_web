@@ -84,18 +84,15 @@ export default function Wallet() {
 
             let data;
 
-            if(modalType === "withdraw"){
-                if(amount>Number(wallet.balance)){
+            if (modalType === "withdraw") {
+                if (amount > Number(wallet.balance)) {
                     toast.error(`The Wallet isnot enough. Your current balance is ${wallet.balance} Bath`)
                 };
-                return;
+                data = await withdrawWallet(payload);
             }
 
             if (modalType === "deposit") {
                 data = await depositWallet(payload);
-            }
-            if (modalType === "withdraw") {
-                data = await withdrawWallet(payload);
             }
 
             setWallet(data.data.updatedWallet);
@@ -323,7 +320,7 @@ export default function Wallet() {
                                         </span>
                                     </label>
 
-                                    <label className="input input-bordered flex items-center gap-2">
+                                    <label className="input input-bordered flex items-center gap-2 w-full">
                                         <span className="text-base-content/50">
                                             ฿
                                         </span>
